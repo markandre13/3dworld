@@ -1,0 +1,158 @@
+
+                  A Small Summary Of the SGI Graphics Library
+                 =============================================
+
+void clear(void)
+	clears the window to the current color
+void concave(long on)
+	TRUE to enable, FALSE to disable	
+long getgdesc(?)
+	GD_XPMAX or GD_YPMAX will return the maximum number of pixels
+	GD_BITS_NORM_ZBUFFER will return the number of bitplanes in the z-buffer
+	GD_ZMAX will return the maximum value for the z-buffer
+void shademodel(long mode)
+	FLAT or GOURAUD
+void backface(int)
+	TRUE: all clockwise drawn polygons are not filled
+void zbuffer(int)
+	TRUE: enable z-buffer		
+void zclear()
+	clear the z-buffer bitplanes to the maximum value	
+void czclear(unsigned long color, long zfar)
+	color		: color index or rgb
+	zfar		: use getdesc(GD_ZMAX)
+
+void doublebuffer(void)
+	enables doublebuffering (must precede a call to gconfig() )
+void gconfig(void)
+	graphics configuration changes require this call afterwards
+void swapbuffer(void)
+
+Colormap mode:
+cmode()
+	switch to the colormap mode (must precede a call to gconfig() )
+void color(short index)
+	predefined colors are BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN and WHITE
+void mapcolor(short index, short r, short g, short b)
+	index: 0-4095
+	r,g,b: 0-255
+void getmcolor(short index, short *r, short *g, short *b)
+
+RGB mode:
+RGBmode()
+	switch to the RGB mode (must precede a call to gcconfig() )
+void c3f(float v[3])
+void c3i(long v[3])
+void c3s(short v[3])
+void cpack(unsigned long 0xBBGGRR)
+
+void subpixel()
+	TRUE, FALSE (in the examples always set to TRUE)
+	
+void lookat(float vx, float vy, float vz, float px, float py, float pz, short twist)
+	vx,vy,vz: eye viewpoint
+	px,py,pz: reference point
+	twist		: counter-clockwise rotation about line of sight, integer of tenths of
+						degress	
+void polarview(float dist, short azim, short inc, short twist)
+	points always at the origin
+	dist		: eye to world space origin
+	azim		: azimuth angle in xy plane around z axis
+	inc			: incidence angle in yz plane around x axis
+	twist   : (as above)	
+void ortho(...)
+void ortho2(...)
+void window(...)
+
+matrix operations:
+   +------------+   +------------+   +------------+
+   |  current   |   | projection |   |   matrix   |  <- the matrix stack 
+   |  matrix    |   |   matrix   |   |            |
+   +------------+   +------------+   +------------+
+                                     |   matrix   |
+                                     ...
+
+void mmode(short mode)
+	changes the matrix mode
+	MSINGLE			: all transformations affect the current matrix
+								projection calls do replace the current matrix
+								viewing and modeling calls pre-multiply the current matrix
+								entering or leaving MSINGLE initializes the current matrix
+								to identity
+	in these modes the projection matrix is maintained separately from the
+	ModelView matrix stack:							
+	MVIEWING		: Projection calls replace the projection matrix
+								Modelling and viewing calls pre-multiply the current matrix
+	MPROJECTION : All transformations (projection, viewing, modelling) affect
+								the projection matrix, which is NOT a usual mode to use
+void pushmatrix()
+	make a copy of the current matrix and push it onto the stack
+void popmatrix()
+	pop the current matrix off the stack and discard it
+void loadmatrix(float m[4][4])
+	replace the current matrix with m
+void getmatrix(float m[4][4])
+	copy the current matrix into m
+void multmatrix(float m[4][4])
+	premultiply the current matrix by m		
+void translate(float tx, float ty, float tz)
+	pre-multiplies the current matrix by a translation matrix
+	 / 1  0  0  0\
+	|  0  1  0  0 |
+	|  0  0  1  0 |
+	 \tx ty tz  1/
+void scale(float sx, float sy, float sz)
+	pre-multiplies the current matrix by a scale matrix
+	 /sx  0  0  0\
+	|  0 sy  0  0 |
+	|  0  0 sz  0 |
+	 \ 0  0  0  1/
+void rotate(short angel, char axis)
+	pre-multiplies a rotation matrix onto the current matrix
+	angel	: is tenths of degree (counter-clockwise)
+	axis	: 'x', 'y' or 'z'
+void rot(short angel, char axis)
+	pre-multiplies a rotation matrix onto the current matrix
+	angel	: is degree (counter-clockwise)
+	axis	: 'x', 'y' or 'z'
+	 /       1       0       0 0 \
+	|        0  cos(x)  sin(x) 0  |
+	|        0 -sin(x)  cos(x) 0  |
+	 \       0       0       0 1 /
+
+	 /  cos(y)      0  -sin(y) 0 \
+	|        0      1        0 0  |
+	|   sin(y)      0   cos(y) 0  |
+	 \       0      0        0 1 /
+
+	 /  cos(z) sin(z)        0 0 \
+	|  -sin(z) cos(z)        0 0  |
+	|        0      0        1 0  |
+	 \       0      0        0 1 /
+
+			
+void bgnclosedline(void), void endclosedline(void)
+void bgnline(void), void endline(void)
+void bgnpoint(void), void endpoint(void)
+void bgnpolygon(void), void endpolygon(void)
+void bgntmesh(void), void endtmesh(void)
+
+
+(the order of elements for each vector is (x,y,z,w) )
+
+z=0.0, w=1.0:
+void v2d(double v[2])
+void v2f(float v[2])
+void v2i(long v[2])
+void v2s(short v[2])
+
+w=1.0:
+void v3d(double v[3])
+void v3f(float v[3])
+void v3i(long v[3])
+void v3s(short v[3])
+
+void v4d(double v[4])
+void v4f(float v[4])
+void v4i(long v[4])
+void v4s(short v[4])
